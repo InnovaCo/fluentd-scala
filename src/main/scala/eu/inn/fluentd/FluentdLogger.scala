@@ -19,9 +19,9 @@ class FluentdAppender extends UnsynchronizedAppenderBase[ILoggingEvent] {
 
   private var appender: ActorRef = null
 
-  private var tag: String        = "default"
-  private var remoteHost: String = "127.0.0.1"
-  private var port: Int          = 24224
+  private var tag        = "default"
+  private var remoteHost = "127.0.0.1"
+  private var port       = 24224
 
   override def start() {
     super.start()
@@ -69,10 +69,15 @@ object FluentdAppender {
 
 class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Actor with Stash with ActorLogging {
 
-  val messagePack = new ScalaMessagePack()
+  private val messagePack = new ScalaMessagePack
 
   override def preStart() {
     connect()
+  }
+
+  private def connect(delay: FiniteDuration = 0.second) {
+    import context.dispatcher
+    context.system.scheduler.scheduleOnce(delay, IO(Tcp)(context.system), Tcp.Connect(new InetSocketAddress(remoteHost, port)))
   }
 
   def receive = {
@@ -115,10 +120,5 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
       log.warning("Error write to fluentd agent: {}", e)
       context.unbecome()
       connect(delay = 5 seconds)
-  }
-
-  private def connect(delay: FiniteDuration = 0.second) {
-    import context.dispatcher
-    context.system.scheduler.scheduleOnce(delay, IO(Tcp)(context.system), Tcp.Connect(new InetSocketAddress(remoteHost, port)))
   }
 }
