@@ -19,14 +19,14 @@ class FluentdAppender extends UnsynchronizedAppenderBase[ILoggingEvent] {
 
   private var appender: ActorRef = null
 
-  private var tag: String        = ""
+  private var tag: String        = "default"
   private var remoteHost: String = "127.0.0.1"
   private var port: Int          = 24224
 
   override def start() {
-		super.start()
-		appender = actorSystem.actorOf(Props(classOf[FluentdLoggerActor], tag, remoteHost, port))
-	}
+    super.start()
+    appender = actorSystem.actorOf(Props(classOf[FluentdLoggerActor], tag, remoteHost, port))
+  }
 
   override def append(eventObject: ILoggingEvent) {
     if (isStarted && appender != null) {
@@ -34,13 +34,13 @@ class FluentdAppender extends UnsynchronizedAppenderBase[ILoggingEvent] {
     }
   }
 
-	override def stop() {
-		try {
-			super.stop()
-		} finally {
-			actorSystem.stop(appender)
-		}
-	}
+  override def stop() {
+    try {
+      super.stop()
+    } finally {
+      actorSystem.stop(appender)
+    }
+  }
 
   def setTag(tag: String) {
     this.tag = tag
@@ -69,8 +69,6 @@ object FluentdAppender {
 
 class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Actor with Stash with ActorLogging {
 
-  import context.system
-
   val messagePack = new ScalaMessagePack()
 
   override def preStart() {
@@ -93,7 +91,7 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
   def connected(conn: ActorRef): Receive = {
     case event: ILoggingEvent ⇒
       val data = event.getMDCPropertyMap ++ Map(
-        "message" → (if (event.getMessage != null) event.getMessage.trim else null),
+        "message" → event.getFormattedMessage,
         "level"   → event.getLevel.toString,
         "logger"  → event.getLoggerName,
         "thread"  → event.getThreadName
@@ -111,7 +109,7 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
         data("throwable") = ThrowableProxyUtil.asString(event.getThrowableProxy)
       }
 
-      conn ! Tcp.Write(ByteString(messagePack.write(List(tag, event.getTimeStamp / 1000l, data))))
+      conn ! Tcp.Write(ByteString(messagePack.write(List(tag, event.getTimeStamp / 1000, data))))
 
     case e: Tcp.Event ⇒
       log.warning("Error write to fluentd agent: {}", e)
@@ -119,8 +117,8 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
       connect(delay = 5 seconds)
   }
 
-  private def connect(delay: FiniteDuration = 1.second) {
+  private def connect(delay: FiniteDuration = 0.second) {
     import context.dispatcher
-    system.scheduler.scheduleOnce(delay, IO(Tcp), Tcp.Connect(new InetSocketAddress(remoteHost, port)))
+    context.system.scheduler.scheduleOnce(delay, IO(Tcp)(context.system), Tcp.Connect(new InetSocketAddress(remoteHost, port)))
   }
 }
