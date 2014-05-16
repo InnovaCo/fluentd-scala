@@ -123,8 +123,12 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
 
       conn ! Tcp.Write(ByteString(messagePack.write(List(tag, event.getTimeStamp / 1000, data))))
 
-    case e @ (_: Tcp.ConnectionClosed | Tcp.CommandFailed(_: Tcp.Write)) ⇒
-      log.warning("Error write to fluentd agent: {}", e)
+    case Tcp.CommandFailed(write: Tcp.Write) ⇒
+      log.info("Error write to fluentd, retry")
+      conn ! write // retry
+
+    case e: Tcp.ConnectionClosed ⇒
+      log.warning("Error write to fluentd: {}", e)
       context.unbecome()
       connect(delay = 5 seconds)
 
