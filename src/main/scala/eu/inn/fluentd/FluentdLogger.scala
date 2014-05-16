@@ -77,18 +77,25 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
 
   private def connect(delay: FiniteDuration = 0.second) {
     import context.dispatcher
+    log.info("Try connect to fluentd after {}", delay)
+
     context.system.scheduler.scheduleOnce(delay, IO(Tcp)(context.system), Tcp.Connect(new InetSocketAddress(remoteHost, port)))
   }
 
   def receive = {
     case _: Tcp.Connected ⇒
+      log.info("Connected to fluentd")
+
       sender ! Tcp.Register(self)
       context.become(connected(sender))
       unstashAll()
 
-    case e: Tcp.Event ⇒
+    case e @ Tcp.CommandFailed(_: Tcp.Connect) ⇒
       log.warning("Error connect to fluentd agent: {}", e)
       connect(delay = 5 seconds)
+
+    case e: Tcp.Event ⇒
+      log.warning("Unexpected TCP Event {}", e.getClass)
 
     case _ ⇒ stash()
   }
@@ -116,9 +123,12 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
 
       conn ! Tcp.Write(ByteString(messagePack.write(List(tag, event.getTimeStamp / 1000, data))))
 
-    case e: Tcp.Event ⇒
+    case e @ (_: Tcp.ConnectionClosed | Tcp.CommandFailed(_: Tcp.Write)) ⇒
       log.warning("Error write to fluentd agent: {}", e)
       context.unbecome()
       connect(delay = 5 seconds)
+
+    case other ⇒
+      log.warning("Unexpected message {}", other)
   }
 }
