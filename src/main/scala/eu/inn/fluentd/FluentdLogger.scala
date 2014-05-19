@@ -1,6 +1,6 @@
 package eu.inn.fluentd
 
-import java.net.InetSocketAddress
+import java.net.{InetAddress, InetSocketAddress}
 import scala.collection.JavaConversions._
 import scala.concurrent.duration._
 
@@ -103,10 +103,11 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
   def connected(conn: ActorRef): Receive = {
     case event: ILoggingEvent ⇒
       val data = event.getMDCPropertyMap ++ Map(
-        "message" → event.getFormattedMessage,
-        "level"   → event.getLevel.toString,
-        "logger"  → event.getLoggerName,
-        "thread"  → event.getThreadName
+        "message"  → event.getFormattedMessage,
+        "level"    → event.getLevel.toString,
+        "logger"   → event.getLoggerName,
+        "thread"   → event.getThreadName,
+        "hostname" → InetAddress.getLocalHost.getHostName
       )
 
       if (event.getMarker != null) {
