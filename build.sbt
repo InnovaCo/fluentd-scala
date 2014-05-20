@@ -1,3 +1,7 @@
+import SonatypeKeys._
+
+sonatypeSettings
+
 organization := "eu.inn"
 
 name := "fluentd-scala"
@@ -19,20 +23,6 @@ libraryDependencies ++= Seq(
   "org.msgpack" %% "msgpack-scala" % "0.6.8",
   "ch.qos.logback" % "logback-classic" % "1.1.2"
 )
-
-publishMavenStyle := true
-
-publishArtifact in Test := false
-
-publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
-
-pomIncludeRepository := { _ => false }
 
 pomExtra := {
   <url>https://github.com/InnovaCo/fluentd-scala</url>
@@ -60,3 +50,4 @@ pomExtra := {
     </developer>
   </developers>
 }
+
