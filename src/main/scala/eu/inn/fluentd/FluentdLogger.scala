@@ -103,11 +103,12 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
   def connected(conn: ActorRef): Receive = {
     case event: ILoggingEvent ⇒
       val data = event.getMDCPropertyMap ++ Map(
-        "message"  → event.getFormattedMessage,
-        "level"    → event.getLevel.toString,
-        "logger"   → event.getLoggerName,
-        "thread"   → event.getThreadName,
-        "hostname" → InetAddress.getLocalHost.getHostName
+        "message"   → event.getFormattedMessage,
+        "level"     → event.getLevel.toString,
+        "logger"    → event.getLoggerName,
+        "thread"    → event.getThreadName,
+        "timestamp" → event.getTimeStamp,
+        "hostname"  → InetAddress.getLocalHost.getHostName
       )
 
       if (event.getMarker != null) {
