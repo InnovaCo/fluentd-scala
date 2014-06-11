@@ -6,7 +6,7 @@ organization := "eu.inn"
 
 name := "fluentd-scala"
 
-version := "0.1.4"
+version := "0.1.5"
 
 scalaVersion := "2.10.4"
 
@@ -19,7 +19,7 @@ scalacOptions ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.2.0",
+  "com.typesafe.akka" %% "akka-actor" % "2.3.3",
   "org.msgpack" %% "msgpack-scala" % "0.6.8",
   "ch.qos.logback" % "logback-classic" % "1.1.2"
 )
@@ -50,4 +50,3 @@ pomExtra := {
     </developer>
   </developers>
 }
-
