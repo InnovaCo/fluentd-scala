@@ -1,6 +1,8 @@
 package eu.inn.fluentd
 
 import java.net.{InetAddress, InetSocketAddress}
+import akka.routing.RoundRobinRouter
+
 import scala.collection.JavaConversions._
 import scala.concurrent.duration._
 
@@ -25,7 +27,7 @@ class FluentdAppender extends UnsynchronizedAppenderBase[ILoggingEvent] {
 
   override def start() {
     super.start()
-    appender = actorSystem.actorOf(Props(classOf[FluentdLoggerActor], tag, remoteHost, port))
+    appender = actorSystem.actorOf(Props(classOf[FluentdLoggerActor], tag, remoteHost, port).withRouter(RoundRobinRouter(nrOfInstances = 10)))
   }
 
   override def append(eventObject: ILoggingEvent) {
@@ -100,7 +102,15 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
     case _ ⇒ stash()
   }
 
+  var writeErrors = 0
+
   def connected(conn: ActorRef): Receive = {
+
+    /**
+     * todo:
+     *  - add buffering
+     *  - add nrOfInstances to logback xml settings
+     */
     case event: ILoggingEvent ⇒
       val data = event.getMDCPropertyMap ++ Map(
         "message"   → event.getFormattedMessage,
@@ -126,8 +136,12 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
       conn ! Tcp.Write(ByteString(messagePack.write(List(tag, event.getTimeStamp / 1000, data))))
 
     case Tcp.CommandFailed(write: Tcp.Write) ⇒
-      log.info("Error write to fluentd, retry")
-      conn ! write // retry
+      writeErrors += 1
+      if (writeErrors > 1000) {
+        log.warning("Too many errors, close current connection")
+        writeErrors = 0
+        conn ! Tcp.Close
+      }
 
     case e: Tcp.ConnectionClosed ⇒
       log.warning("Error write to fluentd: {}", e)
