@@ -1,6 +1,9 @@
 package eu.inn.fluentd
 
-import java.net.{InetAddress, InetSocketAddress}
+import java.net.InetSocketAddress
+import scala.collection.JavaConversions._
+import scala.collection.mutable.ListBuffer
+import scala.concurrent.duration._
 
 import akka.actor._
 import akka.io.{IO, Tcp}
@@ -10,11 +13,6 @@ import ch.qos.logback.classic.spi.{ILoggingEvent, ThrowableProxyUtil}
 import ch.qos.logback.core.UnsynchronizedAppenderBase
 import com.typesafe.config.ConfigFactory
 import org.msgpack.ScalaMessagePack
-
-import scala.collection.JavaConversions._
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
-import scala.concurrent.duration._
 
 
 class FluentdAppender extends UnsynchronizedAppenderBase[ILoggingEvent] {
@@ -117,12 +115,11 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
   def connected(conn: ActorRef): Receive = {
     case event: ILoggingEvent ⇒
       val data = event.getMDCPropertyMap ++ Map(
-        "message"   → event.getFormattedMessage,
-        "level"     → event.getLevel.toString,
-        "logger"    → event.getLoggerName,
-        "thread"    → event.getThreadName,
-        "timestamp" → event.getTimeStamp.toString,
-        "hostname"  → InetAddress.getLocalHost.getHostName
+        "message"    → event.getFormattedMessage,
+        "level"      → event.getLevel.toString,
+        "logger"     → event.getLoggerName,
+        "thread"     → event.getThreadName,
+        "timemillis" → event.getTimeStamp.toString
       )
 
       if (event.getMarker != null) {
