@@ -1,9 +1,10 @@
 package eu.inn.fluentd
 
-import java.net.InetSocketAddress
+import java.net.{InetAddress, InetSocketAddress}
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration._
+import scala.util.Try
 
 import akka.actor._
 import akka.io.{IO, Tcp}
@@ -80,6 +81,8 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
   val BufferSize    = 100
   val MaxWriteError = 100
 
+  val LocalHostName = Try(InetAddress.getLocalHost.getHostName).getOrElse("unknown-host")
+
   val buffer = ListBuffer.empty[List[Any]]
   buffer.sizeHint(BufferSize)
 
@@ -119,7 +122,8 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
         "level"      → event.getLevel.toString,
         "logger"     → event.getLoggerName,
         "thread"     → event.getThreadName,
-        "timemillis" → event.getTimeStamp.toString
+        "timemillis" → event.getTimeStamp.toString,
+        "host"       → LocalHostName
       )
 
       if (event.getMarker != null) {
