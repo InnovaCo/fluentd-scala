@@ -1,7 +1,7 @@
 fluentd-scala
 =============
 
-[Logback](http://logback.qos.ch) appender to fluentd http://fluentd.org/ based on akka IO
+[Logback](http://logback.qos.ch) appender for fluentd http://fluentd.org/ based on akka IO
 
 
 ```xml
