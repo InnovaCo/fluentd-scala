@@ -6,11 +6,11 @@ organization := "eu.inn"
 
 name := "fluentd-scala"
 
-version := "0.1.9"
+version := "0.1.10"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.2"
 
-crossScalaVersions := Seq("2.10.4", "2.11.1")
+crossScalaVersions := Seq("2.10.4", "2.11.2")
 
 scalacOptions ++= Seq(
   "-language:postfixOps",
@@ -21,8 +21,8 @@ scalacOptions ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.3.3",
-  "org.msgpack" % "msgpack-scala_2.10" % "0.6.8",
+  "com.typesafe.akka" %% "akka-actor" % "2.3.6",
+  "org.msgpack" %% "msgpack-scala" % "0.6.11",
   "ch.qos.logback" % "logback-classic" % "1.1.2"
 )
 
