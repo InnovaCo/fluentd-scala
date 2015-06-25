@@ -64,7 +64,7 @@ object FluentdAppender {
     ConfigFactory.parseString("""
       akka.loggers = []
       akka.log-dead-letters = off
-    """).withFallback(ConfigFactory.load())
+    """).withFallback(ConfigFactory.load("not-exists-application-config")) // disable application.conf loading
   )
 }
 
