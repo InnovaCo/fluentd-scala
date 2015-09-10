@@ -23,11 +23,12 @@ class FluentdAppender extends UnsynchronizedAppenderBase[ILoggingEvent] {
 
   private var tag        = "default"
   private var remoteHost = "127.0.0.1"
+  private var version    = ""
   private var port       = 24224
 
   override def start() {
     super.start()
-    appender = actorSystem.actorOf(Props(classOf[FluentdLoggerActor], tag, remoteHost, port))
+    appender = actorSystem.actorOf(Props(classOf[FluentdLoggerActor], tag, remoteHost, port, version))
   }
 
   override def append(eventObject: ILoggingEvent) {
@@ -52,6 +53,10 @@ class FluentdAppender extends UnsynchronizedAppenderBase[ILoggingEvent] {
     this.remoteHost = remoteHost
   }
 
+  def setVersion(version: String) {
+    this.version = version
+  }
+
   def setPort(port: Int) {
     this.port = port
   }
@@ -70,7 +75,7 @@ object FluentdAppender {
 }
 
 
-class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Actor with Stash with ActorLogging {
+class FluentdLoggerActor(tag: String, remoteHost: String, port: Int, version: String) extends Actor with Stash with ActorLogging {
   import context.dispatcher
 
   case object FlushBuffer
@@ -137,6 +142,10 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int) extends Act
 
       if (event.getThrowableProxy != null) {
         data("throwable") = ThrowableProxyUtil.asString(event.getThrowableProxy)
+      }
+
+      if (version != "") {
+        data("version") = version
       }
 
       buffer += List(event.getTimeStamp / 1000, data)
