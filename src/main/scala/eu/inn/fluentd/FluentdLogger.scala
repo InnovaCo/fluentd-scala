@@ -119,7 +119,10 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int, version: St
     case e: Tcp.Event ⇒
       log.warning("Unexpected TCP Event {}", e.getClass)
 
-    case _: ILoggingEvent ⇒ stash()
+    case _: ILoggingEvent ⇒
+      try stash() catch {
+        case e: StashOverflowException ⇒ // skip
+      }
   }
 
   def connected(conn: ActorRef): Receive = {
