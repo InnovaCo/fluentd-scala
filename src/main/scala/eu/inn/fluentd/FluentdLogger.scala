@@ -70,6 +70,7 @@ object FluentdAppender {
       akka.loggers = []
       akka.log-dead-letters = off
       akka.daemonic = on
+      akka.actor.default-mailbox.stash-capacity = 8192
     """)
   )
 }
@@ -99,7 +100,7 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int, version: St
   }
 
   private def connect(delay: FiniteDuration = 0.second) {
-    log.info("Try connect to fluentd after {}", delay)
+    log.debug("Try connect to fluentd after {}", delay)
     context.system.scheduler.scheduleOnce(delay, IO(Tcp)(context.system), Tcp.Connect(new InetSocketAddress(remoteHost, port)))
   }
 
