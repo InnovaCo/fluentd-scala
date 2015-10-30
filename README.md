@@ -21,7 +21,7 @@ fluentd-scala
 Available on Maven Central. Settings for SBT:
 
 ```scala
-libraryDependencies += "eu.inn" %% "fluentd-scala" % "0.1.13"
+libraryDependencies += "eu.inn" %% "fluentd-scala" % "0.1.16"
 ```
 
 
