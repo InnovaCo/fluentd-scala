@@ -23,3 +23,11 @@ Available on Maven Central. Settings for SBT:
 ```scala
 libraryDependencies += "eu.inn" %% "fluentd-scala" % "0.1.13"
 ```
+
+
+#### Release new version
+
+```
+sbt publishSigned
+sbt sonatypeRelease
+```
