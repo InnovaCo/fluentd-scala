@@ -1,7 +1,3 @@
-import SonatypeKeys._
-
-sonatypeSettings
-
 organization := "eu.inn"
 
 name := "fluentd-scala"
