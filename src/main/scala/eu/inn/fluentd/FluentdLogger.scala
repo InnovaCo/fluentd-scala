@@ -133,7 +133,8 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int, version: St
         "logger"     → event.getLoggerName,
         "thread"     → event.getThreadName,
         "timemillis" → event.getTimeStamp.toString,
-        "host"       → LocalHostName
+        "host"       → LocalHostName,
+        "timenanos"  → System.nanoTime().toString
       )
 
       if (event.getMarker != null) {
