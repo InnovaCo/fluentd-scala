@@ -93,9 +93,6 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int, version: St
   val buffer = ListBuffer.empty[List[Any]]
   buffer.sizeHint(BufferSize)
 
-  val startTimeMicros = System.currentTimeMillis * 1000L
-  val startTimeNanos  = System.nanoTime
-
   context.system.scheduler.schedule(10 seconds, 10 seconds, self, FlushBuffer)
 
   override def preStart() {
@@ -135,7 +132,7 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int, version: St
         "level"      → event.getLevel.toString,
         "logger"     → event.getLoggerName,
         "thread"     → event.getThreadName,
-        "timemillis" → "%.3f".format(getTimestampInMicros / 1000D),
+        "timemillis" → event.getTimeStamp.toString,
         "host"       → LocalHostName
       )
 
@@ -188,7 +185,4 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int, version: St
     conn ! Tcp.Write(ByteString(messagePack.write(List(tag, buffer.toList))))
     buffer.clear()
   }
-
-  private def getTimestampInMicros =
-    startTimeMicros + ((System.nanoTime - startTimeNanos) / 1000L)
 }
