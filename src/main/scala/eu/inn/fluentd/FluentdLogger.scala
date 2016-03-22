@@ -145,7 +145,7 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int, version: St
       }
 
       if (event.getThrowableProxy != null) {
-        data("throwable") = ThrowableProxyUtil.asString(event.getThrowableProxy)
+        data("throwable") = ThrowableProxyUtil.asString(event.getThrowableProxy).take(2048)
       }
 
       if (version != "") {

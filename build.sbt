@@ -2,7 +2,7 @@ organization := "eu.inn"
 
 name := "fluentd-scala"
 
-version := "0.1.19"
+version := "0.1.20"
 
 scalaVersion := "2.11.6"
 
