@@ -2,9 +2,10 @@ dependencies:
   cache_directories:
     - "~/.sbt"
     - "~/.ivy2"
-  
+
 deployment:
   master:
     branch: master
     commands:
-      - sbt publishSigned
+      - sbt package
+      - cp target/scala-2.11/fluentd-scala*.jar $CIRCLE_ARTIFACTS/
