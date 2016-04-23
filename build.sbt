@@ -2,18 +2,27 @@ organization := "eu.inn"
 
 name := "fluentd-scala"
 
-version := "0.1.20"
+version := "0.1.21"
 
-scalaVersion := "2.11.6"
-
-crossScalaVersions := Seq("2.10.4", "2.11.6")
+scalaVersion := "2.11.8"
 
 scalacOptions ++= Seq(
   "-language:postfixOps",
+  "-language:implicitConversions",
   "-feature",
   "-deprecation",
+  "-unchecked",
   "-optimise",
-  "-encoding", "utf8"
+  "-target:jvm-1.7",
+  "-encoding", "UTF-8"
+)
+
+javacOptions ++= Seq(
+  "-source", "1.7",
+  "-target", "1.7",
+  "-encoding", "UTF-8",
+  "-Xlint:unchecked",
+  "-Xlint:deprecation"
 )
 
 libraryDependencies ++= Seq(

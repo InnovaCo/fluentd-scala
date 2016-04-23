@@ -1,0 +1,10 @@
+dependencies:
+  cache_directories:
+    - "~/.sbt"
+    - "~/.ivy2"
+  
+deployment:
+  master:
+    branch: master
+    commands:
+      - sbt publishSigned
