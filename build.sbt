@@ -13,13 +13,13 @@ scalacOptions ++= Seq(
   "-deprecation",
   "-unchecked",
   "-optimise",
-  "-target:jvm-1.7",
+  "-target:jvm-1.8",
   "-encoding", "UTF-8"
 )
 
 javacOptions ++= Seq(
-  "-source", "1.7",
-  "-target", "1.7",
+  "-source", "1.8",
+  "-target", "1.8",
   "-encoding", "UTF-8",
   "-Xlint:unchecked",
   "-Xlint:deprecation"
