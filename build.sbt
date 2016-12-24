@@ -28,7 +28,7 @@ javacOptions ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.4.12",
+  "com.typesafe.akka" %% "akka-actor" % "2.4.16",
   "org.msgpack" % "msgpack-scala_2.11" % "0.6.11",
   "ch.qos.logback" % "logback-classic" % "1.1.7"
 )
@@ -68,7 +68,7 @@ usePgpKeyHex("1FC91057C33D1A33")
 
 pgpPassphrase := Option(System.getenv().get("oss_gpg_passphrase")).map(_.toCharArray)
 
-credentials += Credentials("Sonatype Nexus Repository Manager", 
+credentials += Credentials("Sonatype Nexus Repository Manager",
   "oss.sonatype.org",
   System.getenv().get("sonatype_username"),
   System.getenv().get("sonatype_password"))
