@@ -1,7 +1,7 @@
 fluentd-scala
 =============
 
-[![Circle CI](https://circleci.com/gh/kulikov/fluentd-scala.svg?style=svg)](https://circleci.com/gh/kulikov/fluentd-scala)
+[![Travis CI](https://travis-ci.org/kulikov/fluentd-scala.svg?branch=master)](https://travis-ci.org/kulikov/fluentd-scala)
 
 [Logback](http://logback.qos.ch) appender for fluentd http://fluentd.org/ based on akka IO
 
