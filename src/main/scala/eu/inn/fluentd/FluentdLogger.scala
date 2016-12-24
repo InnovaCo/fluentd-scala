@@ -1,7 +1,7 @@
 package eu.inn.fluentd
 
 import java.net.{InetAddress, InetSocketAddress}
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration._
 import scala.util.Try
@@ -127,7 +127,7 @@ class FluentdLoggerActor(tag: String, remoteHost: String, port: Int, version: St
 
   def connected(conn: ActorRef): Receive = {
     case event: ILoggingEvent ⇒
-      val data = event.getMDCPropertyMap ++ Map(
+      val data = event.getMDCPropertyMap.asScala ++ Map(
         "message"    → event.getFormattedMessage,
         "level"      → event.getLevel.toString,
         "logger"     → event.getLoggerName,
