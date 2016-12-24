@@ -60,9 +60,9 @@ pomExtra := {
   </developers>
 }
 
-pgpSecretRing := file("./travis/pubring.gpg")
+pgpSecretRing := file("./travis/gpg-private.asc.gpg")
 
-pgpPublicRing := file("./travis/secring.gpg")
+pgpPublicRing := file("./travis/gpg-public.asc.gpg")
 
 usePgpKeyHex("1FC91057C33D1A33")
 
