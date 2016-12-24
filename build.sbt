@@ -6,7 +6,7 @@ version := "0.2"
 
 scalaVersion := "2.11.8"
 
-crossScalaVersions := Seq("2.11.8", "2.12.0")
+crossScalaVersions := Seq("2.11.8", "2.12.1")
 
 scalacOptions ++= Seq(
   "-language:postfixOps",
