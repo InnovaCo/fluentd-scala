@@ -2,7 +2,7 @@ organization := "eu.inn"
 
 name := "fluentd-scala"
 
-version := "0.1.22"
+version := "0.1.23"
 
 scalaVersion := "2.11.8"
 
@@ -59,3 +59,16 @@ pomExtra := {
     </developer>
   </developers>
 }
+
+pgpSecretRing := file("./travis/pubring.gpg")
+
+pgpPublicRing := file("./travis/secring.gpg")
+
+usePgpKeyHex("1FC91057C33D1A33")
+
+pgpPassphrase := Option(System.getenv().get("oss_gpg_passphrase")).map(_.toCharArray)
+
+credentials += Credentials("Sonatype Nexus Repository Manager", 
+  "oss.sonatype.org",
+  System.getenv().get("sonatype_username"),
+  System.getenv().get("sonatype_password"))

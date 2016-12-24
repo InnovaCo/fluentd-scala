@@ -1,0 +1,21 @@
+language: scala
+scala:
+- 2.11.8
+sudo: false
+script: $TRAVIS_BUILD_DIR/travis/build.sh
+jdk:
+- oraclejdk8
+addons:
+  apt:
+    packages:
+    - oracle-java8-installer
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.ivy2
+  - $HOME/.sbt
+env:
+  global:
+  - secure: DvT4EhwxHVmYuDr7hYX6E73x/jKJvChQwguiXL5AzHkJHdqKFG1utsrGl9eu587Y36rJF+Ra/X8QElcKnzTYEPsHFdcpwtg4gryr8E9gODil4/vZJ1fhfdA5iO/Y9RlGa4+3uKcwr3nafetcEj8ECQ7AsQ5XKazf/OnJMTYbNn0=
+  - secure: C5eoHPTjn9E1+3J+YRbWYx3Bb+AuBRvV0gd0qaOf+WSb2yRV6lPh0l9LO9+dR2b4r7F/T25q2lNumzz6OogwSujc7M8UFnttEk878H7heuOwtmO1JG3hvTtN/95xPeez+r8NZ40QiRAi/1x0OIWdOYcGf1et/Otd2+cHw6iHUSA=
+  - secure: kHDAPYtMjCSLllGZx2IIuE+TCLZ0cd3eIn76DZBC1lgOBoy4TK6HoVxUa0iA/AD0SW7WIba6PuGXSxDRYvN4qzigSFZgD0d+Qc1Uj4vpHj1/7QJqWJXPIsKJ7xmRjYLshq/LyuOcstVBCXEdqc2FF8YHbomQIzkCrb/OrPYcMf8=
