@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_BRANCH" == "master" ]]; then
   echo "$oss_gpg_passphrase" | gpg --passphrase-fd 0 ./travis/gpg-public.asc.gpg
