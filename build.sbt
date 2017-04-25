@@ -4,9 +4,9 @@ name := "fluentd-scala"
 
 version := "0.2"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.11"
 
-crossScalaVersions := Seq("2.11.8", "2.12.1")
+crossScalaVersions := Seq("2.11.11", "2.12.2")
 
 scalacOptions ++= Seq(
   "-language:postfixOps",
@@ -28,9 +28,9 @@ javacOptions ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.4.16",
+  "com.typesafe.akka" %% "akka-actor" % "2.4.17",
   "org.msgpack" % "msgpack-scala_2.11" % "0.6.11",
-  "ch.qos.logback" % "logback-classic" % "1.1.7"
+  "ch.qos.logback" % "logback-classic" % "1.2.2"
 )
 
 pomExtra := {
